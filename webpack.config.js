@@ -1,0 +1,43 @@
+'use strict';
+let webpack = require("webpack");
+
+let webpackConfig = {
+    output: {
+        filename: "[name].js",
+        sourceMapFilename: 'maps/[name].map',
+        jsonpFunction: 'fr'
+    },
+    devtool: '#inline-source-map',
+    resolve: {
+        modulesDirectories: [
+            'node_modules',
+            'src/js'
+        ]
+    },
+    module: {
+        preLoaders: [
+            { test: /\.js$/, exclude:/Spec\.js$/i, loaders: ['eslint'] }
+        ],
+        loaders: [
+            { test: /\.html$/, exclude:/node_modules/, loaders: ['html'] },
+            { test: /Spec\.js$/i, exclude:/node_modules/, loaders: ['webpack-espower','babel?presets[]=es2015'] },
+            { test: /\.jsx?$/, exclude:/node_modules/, loaders: ['babel?presets[]=es2015'] }
+        ]
+    },
+    plugins: [
+        new webpack.optimize.UglifyJsPlugin({
+            exclude: /Spec\.js$/i,
+            compress: {
+                warnings: false
+            }
+        }),
+        new webpack.optimize.AggressiveMergingPlugin(),
+        new webpack.optimize.OccurenceOrderPlugin(),
+        new webpack.optimize.DedupePlugin()
+    ],
+    eslint: {
+        configFile: '.eslintrc',
+        failOnError: true
+    }
+};
+module.exports = webpackConfig;

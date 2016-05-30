@@ -1,0 +1,12 @@
+block value
+  - var title = 'Template';
+
+doctype html
+html
+  head
+    title #{title}
+    link(rel="stylesheet", href="/css/style.css")
+
+  body
+    block content
+      h1 テンプレート
